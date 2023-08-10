@@ -1,15 +1,13 @@
-#!/bin/bash
-while :
-do
+#!/bin/ash
+while true;do
 
-# Use ncat to listen to the IP address and port specified in the Zebra scanner's IP Output section and store as variable barcodeinput
-    barcodeinput="$(ncat -l [IP ADDRESS] [PORT])"
-    
-# Set Barcode Buddy API url as a variable     
-    apiurl="http://[BARCODE BUDDY IP]/api/action/scan?apikey=[BARCODE BUDDY API KEY]>
-    
+# Use socat to listen on TCP to the docker container IP address and port specified in the Zebra scanner's IP Output section and store as variable barcodeinput
+        barcodeinput="$(socat -u TCP-L:58627, STDOUT)"
+
+# Set Barcode Buddy API url as a variable
+        apiurl="http://[BARCODE BUDDY IP:PORT]api/action/scan?apikey=[BARCODE BUDDY API KEY]&add="
+
 # Send barcodeinput to Barcode Buddy API url
-        apirequest=$(curl -g $apiurl$barcodeinput)
+        apirequest=$(curl $apiurl$barcodeinput)
         echo $apirequest
 done
-
